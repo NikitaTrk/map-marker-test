@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Add New Place</h2>
+
+<div mat-dialog-content>
+  <form #f="ngForm" (ngSubmit)="submit()">
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="name" name="name" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Type</mat-label>
+      <mat-select [(ngModel)]="type" name="type" required style="text-transform: capitalize" >
+        <mat-option *ngFor="let type of types" [value]="type" style="text-transform: capitalize" >{{ type }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Latitude</mat-label>
+      <input matInput type="number" [(ngModel)]="lat" name="lat" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Longitude</mat-label>
+      <input matInput type="number" [(ngModel)]="lng" name="lng" required />
+    </mat-form-field>
+
+    <div mat-dialog-actions align="end">
+      <button mat-button type="submit" [disabled]="f.invalid">Save</button>
+      <button mat-button type="button" (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>

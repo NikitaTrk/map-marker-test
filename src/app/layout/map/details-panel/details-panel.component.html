@@ -1,0 +1,29 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav position="end"
+               mode="over"
+               fixedInViewport
+               [opened]="model.isDetailsPanelOpen$ | async"
+               style="width: 300px; padding: 12px; border-radius: 14px;"
+  >
+    <div style="display: flex; justify-content: end;">
+      <button mat-icon-button (click)="model.setDetailsPanelOpen(false)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <ng-container *ngIf="selectedPlace$ | async as place">
+      <p style="text-transform: capitalize"><b>Name:</b> {{ place.name }}</p>
+      <p style="text-transform: capitalize"><b>Type:</b> {{ place.type }}</p>
+      <p><b>Coordinates:</b> {{ place.coordinates.join(', ') }}</p>
+
+      <ng-container *ngIf="nearestUsers$ | async as users">
+        <p><b>Nearest users:</b></p>
+        <ul style="padding-left: 16px; margin: 0;">
+          <li *ngFor="let user of users" style="margin-bottom: 4px;">
+            {{ user.name }} — {{ user.distanceKm }} km
+          </li>
+        </ul>
+      </ng-container>
+    </ng-container>
+  </mat-sidenav>
+</mat-sidenav-container>
