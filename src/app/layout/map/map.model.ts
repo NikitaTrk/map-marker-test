@@ -1,23 +1,16 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, map, Observable, shareReplay, combineLatest, take } from 'rxjs';
+
 import { Place, PlaceType } from './place';
 import { User } from './user';
-import { BehaviorSubject, map, Observable, shareReplay, combineLatest, take } from 'rxjs';
 import { MapService } from './map.service';
-import { LatLng } from 'leaflet';
 import { GeoUtils } from './geo-utils';
 
 @Injectable({ providedIn: 'root' })
 export class MapModel {
+  //#region Places
   private readonly placesSubject = new BehaviorSubject<ReadonlyArray<Place>>([]);
   readonly places$ = this.placesSubject.asObservable();
-
-  mockAddPlace(place: Omit<Place, 'id'>): void {
-    const places = this.placesSubject.getValue();
-    const id = places.length + 1;
-    this.placesSubject.next([...places, { id, ...place }]);
-
-    this.setSelectedPlaceId(id);
-  }
 
   private readonly selectedPlaceIdSubject = new BehaviorSubject<number | null>(null);
   readonly setSelectedPlaceId = (id: number) => {
@@ -36,8 +29,19 @@ export class MapModel {
     shareReplay(1)
   );
 
+  mockAddPlace(place: Omit<Place, 'id'>): void {
+    const places = this.placesSubject.getValue();
+    const id = places.length + 1;
+    this.placesSubject.next([...places, { id, ...place }]);
+
+    this.setSelectedPlaceId(id);
+  }
+  //#endregion
+
+  //#region Users
   readonly users$: Observable<ReadonlyArray<User>>;
   readonly highlightedUserIds$: Observable<ReadonlyArray<number>>
+  //#endregion
 
   constructor(mapService: MapService) {
     mapService.getPlaces()
@@ -55,18 +59,14 @@ export class MapModel {
     );
 
     this.highlightedUserIds$ = combineLatest([
-      this.places$,
-      this.users$,
-      this.selectedPlaceIdSubject
+      this.selectedPlace$,
+      this.users$
     ]).pipe(
-      map(([places, users, placeId]) => {
-        if (!placeId) return [];
-
-        const place = places.find(p => p.id === placeId);
+      map(([place, users]) => {
         if (!place) return [];
 
         return users
-          .map(({ id, coordinates}) => ({
+          .map(({ id, coordinates }) => ({
             id,
             distance: GeoUtils.getDistance(place.coordinates, coordinates)
           }))
@@ -95,8 +95,9 @@ export class MapModel {
   }
   //#endregion
 
+  //#region Details Panel
   private readonly isDetailsPanelOpenSubject = new BehaviorSubject<boolean>(false);
   readonly isDetailsPanelOpen$ = this.isDetailsPanelOpenSubject.asObservable();
   setDetailsPanelOpen = (isOpen: boolean) => this.isDetailsPanelOpenSubject.next(isOpen);
-
+  //#endregion
 }

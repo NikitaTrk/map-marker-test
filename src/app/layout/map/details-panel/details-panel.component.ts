@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AsyncPipe, NgIf, NgFor } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { combineLatest, filter, map } from 'rxjs';
 
 import { MatSidenavModule } from '@angular/material/sidenav';

@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { PlaceType } from '../place';
-import { MapModel } from '../map.model';
 import { FormsModule } from '@angular/forms';
-import {
-  MatDialogModule,
-  MatDialogRef
-} from '@angular/material/dialog';
+import { NgFor, NgIf } from '@angular/common';
+
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf, NgFor } from '@angular/common';
+
+import { PlaceType } from '../place';
+import { MapModel } from '../map.model';
 
 @Component({
   templateUrl: './add-place-dialog.component.html',

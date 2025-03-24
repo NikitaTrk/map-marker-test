@@ -3,60 +3,90 @@
     "id": 1,
     "name": "Independence Plaza",
     "type": "store",
-    "coordinates": [50.4507, 30.5238]
+    "coordinates": [
+      50.4507,
+      30.5238
+    ]
   },
   {
     "id": 2,
     "name": "Riverside Cafe",
     "type": "cafe",
-    "coordinates": [50.4511, 30.5220]
+    "coordinates": [
+      50.4511,
+      30.5220
+    ]
   },
   {
     "id": 3,
     "name": "TechPoint Office",
     "type": "office",
-    "coordinates": [40.7128, -74.0060]
+    "coordinates": [
+      40.7128,
+      -74.0060
+    ]
   },
   {
     "id": 4,
     "name": "Bayview Store",
     "type": "store",
-    "coordinates": [37.7749, -122.4194]
+    "coordinates": [
+      37.7749,
+      -122.4194
+    ]
   },
   {
     "id": 5,
     "name": "Tokyo Hub",
     "type": "office",
-    "coordinates": [35.6895, 139.6917]
+    "coordinates": [
+      35.6895,
+      139.6917
+    ]
   },
   {
     "id": 6,
     "name": "Bangkok Corner",
     "type": "cafe",
-    "coordinates": [13.7563, 100.5018]
+    "coordinates": [
+      13.7563,
+      100.5018
+    ]
   },
   {
     "id": 7,
     "name": "Santiago Office",
     "type": "office",
-    "coordinates": [-33.4489, -70.6693]
+    "coordinates": [
+      -33.4489,
+      -70.6693
+    ]
   },
   {
     "id": 8,
     "name": "Rio Roasters",
     "type": "cafe",
-    "coordinates": [-22.9068, -43.1729]
+    "coordinates": [
+      -22.9068,
+      -43.1729
+    ]
   },
   {
     "id": 9,
     "name": "Outback Supplies",
     "type": "store",
-    "coordinates": [-33.8688, 151.2093]
+    "coordinates": [
+      -33.8688,
+      151.2093
+    ]
   },
   {
     "id": 10,
     "name": "Nairobi Workspace",
     "type": "office",
-    "coordinates": [-1.2921, 36.8219]
+    "coordinates": [
+      -1.2921,
+      36.8219
+    ]
   }
 ]

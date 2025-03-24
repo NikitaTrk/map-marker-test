@@ -13,12 +13,11 @@ import { User } from '../user';
   selector: 'map-container',
   templateUrl: './map-container.component.html',
   //
-  standalone: true,
+  standalone: true
 })
 export class MapContainerComponent implements OnInit, OnDestroy {
+  @ViewChild('mapContainer', { static: true }) private mapContainer!: ElementRef<HTMLDivElement>;
   private map!: LeafletMap;
-
-  @ViewChild('mapContainer', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
 
   ngOnInit(): void {
     this.initMap();
@@ -27,23 +26,25 @@ export class MapContainerComponent implements OnInit, OnDestroy {
     this.setUserMarkers();
   }
 
-  private createUserPopupComponent(user: User): HTMLElement {
-    const componentRef = createComponent(UserPopupComponent, { environmentInjector: this.appRef.injector });
-    componentRef.instance.user = user;
-    this.appRef.attachView(componentRef.hostView);
+  constructor(private readonly model: MapModel, private readonly appRef: ApplicationRef) {
+    this.model.selectedPlace$
+      .pipe(filter(Boolean), takeUntil(this.destroyed$))
+      .subscribe(place => {
+        this.map.setView(place.coordinates, this.map.getZoom(), { animate: true });
+      });
 
-    return componentRef.location.nativeElement;
-  }
-
-  constructor(readonly model: MapModel, private appRef: ApplicationRef) {
+    this.model.highlightedUserIds$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(ids => {
+        this.userMarkerMap.forEach((marker, id) => {
+          marker.setIcon(ids.includes(id) ? highlightedUserIcon : userIcon);
+        });
+      });
   }
 
   private initMap(): void {
     this.map = new LeafletMap(this.mapContainer.nativeElement).setView([50.4501, 30.5234], 10);
-
-    tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(this.map);
+    tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
   }
 
   private readonly placeLayerGroup = new LayerGroup();
@@ -51,7 +52,7 @@ export class MapContainerComponent implements OnInit, OnDestroy {
     this.placeLayerGroup.addTo(this.map);
 
     combineLatest([this.model.places$, this.model.typesFilter$]).pipe(
-      map(([places, filters]) => places.filter(place => filters.includes(place.type))),
+      map(([places, filters]) => places.filter(({ type }) => filters.includes(type))),
       takeUntil(this.destroyed$)
     ).subscribe(filteredPlaces => {
       this.placeLayerGroup.clearLayers();
@@ -62,18 +63,10 @@ export class MapContainerComponent implements OnInit, OnDestroy {
         this.placeLayerGroup.addLayer(marker);
       });
     });
-
-    this.model.selectedPlace$
-      .pipe(filter(Boolean), takeUntil(this.destroyed$))
-      .subscribe(place => {
-        this.map.setView(place.coordinates, this.map.getZoom(), { animate: true });
-      });
-
   }
 
   private readonly userLayerGroup = new LayerGroup();
   private readonly userMarkerMap = new Map<number, Marker>();
-
   private setUserMarkers(): void {
     this.userLayerGroup.addTo(this.map);
 
@@ -88,15 +81,14 @@ export class MapContainerComponent implements OnInit, OnDestroy {
           this.userLayerGroup.addLayer(marker);
         });
       });
+  }
 
-    this.model.highlightedUserIds$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(ids => {
-        this.userMarkerMap.forEach((marker, id) => {
-          marker.setIcon(ids.includes(id) ? highlightedUserIcon : userIcon);
-        });
-      });
+  private createUserPopupComponent(user: User): HTMLElement {
+    const componentRef = createComponent(UserPopupComponent, { environmentInjector: this.appRef.injector });
+    componentRef.instance.user = user;
+    this.appRef.attachView(componentRef.hostView);
 
+    return componentRef.location.nativeElement;
   }
 
   private readonly destroyed$ = new Subject<void>();

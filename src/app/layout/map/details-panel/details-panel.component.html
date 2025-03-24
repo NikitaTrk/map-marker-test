@@ -1,12 +1,12 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav position="end"
-               mode="over"
+  <mat-sidenav [opened]="model.isDetailsPanelOpen$ | async"
                fixedInViewport
-               [opened]="model.isDetailsPanelOpen$ | async"
-               style="width: 300px; padding: 12px; border-radius: 14px;"
+               mode="over"
+               position="end"
+               style="width: 300px; padding: 12px; border-radius: 18px 0 0 18px;"
   >
     <div style="display: flex; justify-content: end;">
-      <button mat-icon-button (click)="model.setDetailsPanelOpen(false)">
+      <button (click)="model.setDetailsPanelOpen(false)" mat-icon-button>
         <mat-icon>close</mat-icon>
       </button>
     </div>
